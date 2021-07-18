@@ -1,0 +1,20 @@
+.editor-comp {
+    width: 100%;
+}
+
+.heading-div {
+  display: flex;
+  flex-direction: row;
+  background-color: #5b9aa0;
+  width: 100%;
+  color: black;
+}
+
+.fa-arrows-alt {
+  color: black;
+}
+
+.fa-arrows-alt:hover {
+  color: cyan;
+  cursor: pointer;
+}
