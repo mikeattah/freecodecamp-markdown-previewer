@@ -1,6 +1,6 @@
 import "./App.css";
 import Editor from "./containers/Editor.js";
-import Previewer from "./components/Previewer.js";
+// import Previewer from "./components/Previewer.js";
 
 function App() {
   return (
@@ -8,7 +8,6 @@ function App() {
       <header className="App-header">
         <div className="App-div">
           <Editor />
-          <Previewer />
         </div>
       </header>
     </div>
