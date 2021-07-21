@@ -1,8 +1,11 @@
-import { render, screen } from '@testing-library/react';
-import App from './App';
+import { render, screen } from "@testing-library/react";
+import App from "./App.js";
 
-test('renders learn react link', () => {
+test("renders Editor Component", () => {
   render(<App />);
-  const linkElement = screen.getByText(/learn react/i);
-  expect(linkElement).toBeInTheDocument();
+  const editor = screen.getByText("Editor");
+  const previewer = screen.getByText("Previewer");
+
+  expect(editor).toBeInTheDocument();
+  expect(previewer).toBeInTheDocument();
 });

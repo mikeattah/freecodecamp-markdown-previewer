@@ -13,13 +13,18 @@ class Editor extends React.Component {
     this.initialDisplay = "flex";
     this.editorHeight = "30vh";
     this.previewHeight = "75vh";
+    this.className = "fa fa-arrows-alt";
+    this.hoverTitle = "maximize";
     this.state = {
       value: this.initialValue,
       boot: this.initialValue,
       editorDisplay: this.initialDisplay,
       editorHeight: this.editorHeight,
+      editorClassName: this.className,
       previewDisplay: this.initialDisplay,
       previewHeight: this.previewHeight,
+      previewClassName: this.className,
+      hoverTitle: this.hoverTitle,
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleEditorDisplay = this.handleEditorDisplay.bind(this);
@@ -33,14 +38,22 @@ class Editor extends React.Component {
   handleEditorDisplay() {
     this.setState({
       editorDisplay: "flex" ? "none" : "flex",
-      previewDisplay: "120vh",
+      previewDisplay: "120vh" ? "30vh" : "120vh",
+      previewClassName: "fa fa-arrows-alt"
+        ? "fa fa-compress"
+        : "fa fa-arrows-alt",
+      hoverTitle: "maximize" ? "minimize" : "maximize",
     });
   }
 
   handlePreviewDisplay() {
     this.setState({
       previewDisplay: "flex" ? "none" : "flex",
-      editorHeight: "120vh",
+      editorHeight: "120vh" ? "30vh" : "120vh",
+      editorClassName: "fa fa-arrows-alt"
+        ? "fa fa-compress"
+        : "fa fa-arrows-alt",
+      hoverTitle: "maximize" ? "minimize" : "maximize",
     });
   }
 
@@ -61,11 +74,13 @@ class Editor extends React.Component {
             </div>
             <div className="e-close-div">
               <i
-                className="fa fa-arrows-alt"
+                id="editoricon"
+                className={this.state.editorClassName}
                 ariaHidden="true"
-                title="maximize"
+                title={this.state.hoverTitle}
                 onClick={this.handleEditorDisplay}
               ></i>
+              {/* <i class="fa fa-compress" aria-hidden="true"></i> */}
             </div>
           </div>
           <div className="editor-div">
@@ -90,9 +105,10 @@ class Editor extends React.Component {
             </div>
             <div className="p-close-div">
               <i
-                className="fa fa-arrows-alt"
+                id="previewicon"
+                className={this.state.previewClassName}
                 ariaHidden="true"
-                title="maximize"
+                title={this.state.hoverTitle}
                 onClick={this.handlePreviewDisplay}
               ></i>
               {/* <i class="fa fa-compress" aria-hidden="true"></i> */}
