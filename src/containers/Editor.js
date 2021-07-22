@@ -1,7 +1,9 @@
 import React from "react";
-import ReactMarkdown from "react-markdown";
-import gfm from "remark-gfm";
+// import ReactMarkdown from "react-markdown";
+// import gfm from "remark-gfm";
 import "./Editor.css";
+import marked from "marked";
+// import { markdownText } from "./assets/markdown-text.txt";
 
 // const initialState = {
 //   value: 0
@@ -9,51 +11,71 @@ import "./Editor.css";
 class Editor extends React.Component {
   constructor(props) {
     super(props);
-    this.initialValue = "Welcome to my React Markdown Previewer!";
+    this.initialValue = "Welcome to my React Markdown Previewer!"; // change to markdown text
     this.initialDisplay = "flex";
     this.editorHeight = "30vh";
     this.previewHeight = "75vh";
-    this.className = "fa fa-arrows-alt";
-    this.hoverTitle = "maximize";
+    this.hoverTitle = "close";
     this.state = {
       value: this.initialValue,
-      boot: this.initialValue,
       editorDisplay: this.initialDisplay,
       editorHeight: this.editorHeight,
-      editorClassName: this.className,
+      editorCloseIconDisplay: "inline-block",
+      editorMinimizeIconDisplay: "none",
       previewDisplay: this.initialDisplay,
       previewHeight: this.previewHeight,
-      previewClassName: this.className,
+      previewCloseIconDisplay: "inline-block",
+      previewMinimizeIconDisplay: "none",
       hoverTitle: this.hoverTitle,
     };
     this.handleChange = this.handleChange.bind(this);
-    this.handleEditorDisplay = this.handleEditorDisplay.bind(this);
-    this.handlePreviewDisplay = this.handlePreviewDisplay.bind(this);
+    this.handleEditorClose = this.handleEditorClose.bind(this);
+    this.handleEditorMinimize = this.handleEditorMinimize.bind(this);
+    this.handlePreviewClose = this.handlePreviewClose.bind(this);
+    this.handlePreviewMinimize = this.handlePreviewMinimize.bind(this);
   }
 
   handleChange(event) {
     this.setState({ value: event.target.value });
   }
 
-  handleEditorDisplay() {
+  handleEditorClose() {
     this.setState({
-      editorDisplay: "flex" ? "none" : "flex",
-      previewDisplay: "120vh" ? "30vh" : "120vh",
-      previewClassName: "fa fa-arrows-alt"
-        ? "fa fa-compress"
-        : "fa fa-arrows-alt",
-      hoverTitle: "maximize" ? "minimize" : "maximize",
+      editorDisplay: "none",
+      previewHeight: "120vh",
+      previewCloseIconDisplay: "none",
+      previewMinimizeIconDisplay: "inline-block",
+      hoverTitle: "minimize",
     });
   }
 
-  handlePreviewDisplay() {
+  handleEditorMinimize() {
     this.setState({
-      previewDisplay: "flex" ? "none" : "flex",
-      editorHeight: "120vh" ? "30vh" : "120vh",
-      editorClassName: "fa fa-arrows-alt"
-        ? "fa fa-compress"
-        : "fa fa-arrows-alt",
-      hoverTitle: "maximize" ? "minimize" : "maximize",
+      previewDisplay: "flex",
+      editorHeight: "30vh",
+      editorCloseIconDisplay: "inline-block",
+      editorMinimizeIconDisplay: "none",
+      hoverTitle: "close",
+    });
+  }
+
+  handlePreviewClose() {
+    this.setState({
+      previewDisplay: "none",
+      editorHeight: "120vh",
+      editorCloseIconDisplay: "none",
+      editorMinimizeIconDisplay: "inline-block",
+      hoverTitle: "minimize",
+    });
+  }
+
+  handlePreviewMinimize() {
+    this.setState({
+      editorDisplay: "flex",
+      previewHeight: "75vh",
+      previewCloseIconDisplay: "inline-block",
+      previewMinimizeIconDisplay: "none",
+      hoverTitle: "close",
     });
   }
 
@@ -74,21 +96,30 @@ class Editor extends React.Component {
             </div>
             <div className="e-close-div">
               <i
-                id="editoricon"
-                className={this.state.editorClassName}
+                className="fa fa-arrows-alt"
                 ariaHidden="true"
                 title={this.state.hoverTitle}
-                onClick={this.handleEditorDisplay}
+                onClick={this.handleEditorClose}
+                style={{ display: this.state.editorCloseIconDisplay }}
               ></i>
-              {/* <i class="fa fa-compress" aria-hidden="true"></i> */}
+              <i
+                className="fa fa-compress"
+                ariaHidden="true"
+                title={this.state.hoverTitle}
+                onClick={this.handleEditorMinimize}
+                style={{ display: this.state.editorMinimizeIconDisplay }}
+              ></i>
             </div>
           </div>
           <div className="editor-div">
             <textarea
               id="editor"
-              placeholder={this.state.boot}
+              placeholder="Enter markdown text..."
               onChange={this.handleChange}
-            ></textarea>
+              style={{ minHeight: this.state.editorHeight }}
+            >
+              {this.state.value}
+            </textarea>
           </div>
         </div>
         <div
@@ -105,22 +136,23 @@ class Editor extends React.Component {
             </div>
             <div className="p-close-div">
               <i
-                id="previewicon"
-                className={this.state.previewClassName}
+                className="fa fa-arrows-alt"
                 ariaHidden="true"
                 title={this.state.hoverTitle}
-                onClick={this.handlePreviewDisplay}
+                onClick={this.handlePreviewClose}
+                style={{ display: this.state.previewCloseIconDisplay }}
               ></i>
-              {/* <i class="fa fa-compress" aria-hidden="true"></i> */}
+              <i
+                className="fa fa-compress"
+                ariaHidden="true"
+                title={this.state.hoverTitle}
+                onClick={this.handlePreviewMinimize}
+                style={{ display: this.state.previewMinimizeIconDisplay }}
+              ></i>
             </div>
           </div>
           <div className="previewer-div">
-            <div id="preview">
-              <ReactMarkdown
-                remarkPlugins={[gfm]}
-                children={this.state.value}
-              />
-            </div>
+            <div id="preview">{marked(this.state.value)}</div>
           </div>
         </div>
       </div>
