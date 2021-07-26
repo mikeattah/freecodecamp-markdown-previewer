@@ -1,13 +1,13 @@
 import React from "react";
-// import ReactMarkdown from "react-markdown";
-// import gfm from "remark-gfm";
-import "./Editor.css";
+import ReactMarkdown from "react-markdown";
+import gfm from "remark-gfm";
 import marked from "marked";
-// import { markdownText } from "./assets/markdown-text.txt";
+import Markdown from "markdown-to-jsx";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+/* Use `…/dist/cjs/…` if you’re not in ESM! */
+import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
+import "./Editor.css";
 
-// const initialState = {
-//   value: 0
-// }
 class Editor extends React.Component {
   constructor(props) {
     super(props);
@@ -17,7 +17,7 @@ class Editor extends React.Component {
     this.previewHeight = "75vh";
     this.hoverTitle = "close";
     this.state = {
-      value: this.initialValue,
+      value: "",
       editorDisplay: this.initialDisplay,
       editorHeight: this.editorHeight,
       editorCloseIconDisplay: "inline-block",
@@ -33,6 +33,16 @@ class Editor extends React.Component {
     this.handleEditorMinimize = this.handleEditorMinimize.bind(this);
     this.handlePreviewClose = this.handlePreviewClose.bind(this);
     this.handlePreviewMinimize = this.handlePreviewMinimize.bind(this);
+  }
+
+  componentWillMount() {
+    const markdownText = "markdown-text.md";
+
+    import(`../assets/${markdownText}`).then((res) => {
+      fetch(res.default)
+        .then((res) => res.text())
+        .then((text) => this.setState({ value: text }));
+    });
   }
 
   handleChange(event) {
@@ -80,6 +90,25 @@ class Editor extends React.Component {
   }
 
   render() {
+    const components = {
+      code({ node, inline, className, children, ...props }) {
+        const match = /language-(\w+)/.exec(className || "");
+        return !inline && match ? (
+          <SyntaxHighlighter
+            style={dark}
+            language={match[1]}
+            PreTag="div"
+            children={String(children).replace(/\n$/, "")}
+            {...props}
+          />
+        ) : (
+          <code className={className} {...props}>
+            {children}
+          </code>
+        );
+      },
+    };
+
     return (
       <div className="editor-page">
         <div
@@ -117,8 +146,9 @@ class Editor extends React.Component {
               placeholder="Enter markdown text..."
               onChange={this.handleChange}
               style={{ minHeight: this.state.editorHeight }}
+              value={this.state.value}
             >
-              {this.state.value}
+              {/* {this.state.value} */}
             </textarea>
           </div>
         </div>
@@ -152,7 +182,15 @@ class Editor extends React.Component {
             </div>
           </div>
           <div className="previewer-div">
-            <div id="preview">{marked(this.state.value)}</div>
+            <div id="preview">
+              {/* <Markdown>{this.state.value}</Markdown> */}
+              {/* {marked(this.state.value)} */}
+              <ReactMarkdown
+                components={components}
+                remarkPlugins={[gfm]}
+                children={this.state.value}
+              />
+            </div>
           </div>
         </div>
       </div>
