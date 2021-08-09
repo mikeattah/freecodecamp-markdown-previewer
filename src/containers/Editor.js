@@ -1,32 +1,23 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
 import gfm from "remark-gfm";
-import marked from "marked";
-import Markdown from "markdown-to-jsx";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-/* Use `…/dist/cjs/…` if you’re not in ESM! */
-import { dark } from "react-syntax-highlighter/dist/esm/styles/prism";
 import "./Editor.css";
 
 class Editor extends React.Component {
   constructor(props) {
     super(props);
-    this.initialValue = "Welcome to my React Markdown Previewer!"; // change to markdown text
-    this.initialDisplay = "flex";
-    this.editorHeight = "30vh";
-    this.previewHeight = "75vh";
-    this.hoverTitle = "close";
     this.state = {
       value: "",
-      editorDisplay: this.initialDisplay,
-      editorHeight: this.editorHeight,
+      editorDisplay: "flex",
+      editorHeight: "30vh",
       editorCloseIconDisplay: "inline-block",
       editorMinimizeIconDisplay: "none",
-      previewDisplay: this.initialDisplay,
-      previewHeight: this.previewHeight,
+      previewDisplay: "flex",
+      previewHeight: "75vh",
       previewCloseIconDisplay: "inline-block",
       previewMinimizeIconDisplay: "none",
-      hoverTitle: this.hoverTitle,
+      hoverTitle: "close",
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleEditorClose = this.handleEditorClose.bind(this);
@@ -45,8 +36,8 @@ class Editor extends React.Component {
     });
   }
 
-  handleChange(event) {
-    this.setState({ value: event.target.value });
+  handleChange(e) {
+    this.setState({ value: e.target.value });
   }
 
   handleEditorClose() {
@@ -90,25 +81,6 @@ class Editor extends React.Component {
   }
 
   render() {
-    const components = {
-      code({ node, inline, className, children, ...props }) {
-        const match = /language-(\w+)/.exec(className || "");
-        return !inline && match ? (
-          <SyntaxHighlighter
-            style={dark}
-            language={match[1]}
-            PreTag="div"
-            children={String(children).replace(/\n$/, "")}
-            {...props}
-          />
-        ) : (
-          <code className={className} {...props}>
-            {children}
-          </code>
-        );
-      },
-    };
-
     return (
       <div className="editor-page">
         <div
@@ -147,9 +119,7 @@ class Editor extends React.Component {
               onChange={this.handleChange}
               style={{ minHeight: this.state.editorHeight }}
               value={this.state.value}
-            >
-              {/* {this.state.value} */}
-            </textarea>
+            ></textarea>
           </div>
         </div>
         <div
@@ -183,10 +153,8 @@ class Editor extends React.Component {
           </div>
           <div className="previewer-div">
             <div id="preview">
-              {/* <Markdown>{this.state.value}</Markdown> */}
-              {/* {marked(this.state.value)} */}
               <ReactMarkdown
-                components={components}
+                rehypePlugins={[rehypeHighlight]}
                 remarkPlugins={[gfm]}
                 children={this.state.value}
               />
@@ -199,4 +167,3 @@ class Editor extends React.Component {
 }
 
 export default Editor;
-// remarkPlugins={[gfm]}
