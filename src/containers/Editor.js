@@ -119,7 +119,7 @@ class Editor extends React.Component {
               onChange={this.handleChange}
               style={{ minHeight: this.state.editorHeight }}
               value={this.state.value}
-            ></textarea>
+            />
           </div>
         </div>
         <div
