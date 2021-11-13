@@ -6,6 +6,10 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 You can view it on Code Pen: [https://codepen.io/mikeattah/pen/qBmXLeR](https://codepen.io/mikeattah/pen/qBmXLeR)
 
+## Screenshot
+
+![Screenshot](./screenshot.png)
+
 ## Key Tools and Methods Used
 
 - Git/GitHub
