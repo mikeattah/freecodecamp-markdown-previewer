@@ -41,4 +41,4 @@ And if you want to get really crazy, even tables:
 1. Use just 1s if you want!
 1. And last but not least, let's not forget embedded images:
 
-![React.js](/icons8-react.svg)
+![React.js](../logo.svg)
